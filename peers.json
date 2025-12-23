@@ -1,1 +1,1 @@
-peers.json (initial — empty)
+cp ledger.json backups/ledger-$(date +%F).json
