@@ -1,22 +1,23 @@
+[Unit]
+Description=Soliton Registry — North Star Seed Node (Nᵒᵣᵗʰ‑001)
+After=network.target
 
----
+[Service]
+Type=simple
+WorkingDirectory=/opt/soliton-north-star-node
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=10
+Environment=PORT=3001
+User=soliton
+Group=soliton
 
-### package.json
+# Sovereign hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/soliton-north-star-node
 
-```json
-{
-  "name": "soliton-north-star-node",
-  "version": "1.0.0",
-  "description": "North Star Seed Node — First public Soliton Registry witness",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "crypto-js": "^4.2.0",
-    "uuid": "^9.0.1",
-    "ws": "^8.14.2"
-  }
-}
+[Install]
+WantedBy=multi-user.target
