@@ -1,29 +1,95 @@
 ---
 
-# 🏔️ **4. North Star Node Homepage**  
-### `public/index.html`
+## 4. North Star Node homepage (simple HTML with glyph, badge, ledger viewer)
+
+Save as:
+
+`public/index.html`
+
+(You can serve this with a tiny Express static route or via Nginx in front.)
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>North Star Seed Node — Nᵒᵣᵗʰ‑001</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Soliton North Star Node — Nᵒᵣᵗʰ-001</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, sans-serif; background: #05070b; color: #f5f5f5; margin: 0; }
+    header { text-align: center; padding: 40px 20px; }
+    .glyph { font-size: 64px; margin-bottom: 10px; }
+    .badge { margin-top: 10px; }
+    main { max-width: 800px; margin: 0 auto 60px; padding: 0 20px; }
+    section { margin-bottom: 32px; }
+    h1, h2, h3 { font-weight: 600; }
+    pre { background: #11151f; padding: 10px; overflow-x: auto; border-radius: 4px; }
+    a { color: #6dd5ff; }
+    footer { text-align: center; padding: 20px; font-size: 12px; color: #aaa; }
+    button { background: #2ea44f; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #24913f; }
+  </style>
 </head>
 <body>
+  <header>
+    <div class="glyph">⟲·//</div>
+    <h1>Soliton North Star Node</h1>
+    <p>Designation: Nᵒᵣᵗʰ‑001 — Public Sovereign Witness</p>
+    <div class="badge">
+      <img src="/assets/nds-001-badge.svg" alt="Neurodata Sovereign NDS-001" height="28">
+    </div>
+  </header>
 
-<div class="container">
-  <h1>⟲·// North Star Seed Node</h1>
-  <h2>Designation: Nᵒᵣᵗʰ‑001</h2>
-  <img src="../assets/nds-001-badge.svg" class="badge" />
+  <main>
+    <section>
+      <h2>Purpose</h2>
+      <p>
+        This node is the first public Soliton Registry witness in the Neurodata Sovereign Stack.
+        It records vitality aggregates and revocation events — never raw EEG, never identity.
+      </p>
+    </section>
 
-  <p>This node is a sovereign witness of the Soliton Registry mesh.</p>
+    <section>
+      <h2>Live Ledger Snapshot</h2>
+      <button onclick="loadLedger()">Refresh</button>
+      <pre id="ledger">Click "Refresh" to load a snapshot of the ledger...</pre>
+    </section>
 
-  <button id="loadLedger">Load Ledger</button>
-  <pre id="ledgerOutput">Click to load ledger…</pre>
-</div>
+    <section>
+      <h2>Endpoints</h2>
+      <ul>
+        <li><code>GET /ledger</code> — full ledger</li>
+        <li><code>GET /peers</code> — known peers</li>
+        <li><code>POST /aggregate</code> — witness vitality aggregates</li>
+        <li><code>POST /revoke</code> — honor revocation</li>
+      </ul>
+    </section>
 
-<script src="viewer.js"></script>
+    <section>
+      <h2>Codex Alignment</h2>
+      <p>
+        Governed by <strong>Codex.Legis.Neurodata.v1</strong> and the Ił7 kernel.
+        No raw EEG. No biometric keys. Revocation is absolute.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Soliton Registry — North Star Node (John, Two Mile Solutions LLC)
+  </footer>
+
+  <script>
+    async function loadLedger() {
+      const el = document.getElementById('ledger');
+      el.textContent = 'Loading...';
+      try {
+        const res = await fetch('/ledger');
+        const json = await res.json();
+        el.textContent = JSON.stringify(json, null, 2);
+      } catch (e) {
+        el.textContent = 'Failed to load ledger: ' + e;
+      }
+    }
+  </script>
 </body>
 </html>
