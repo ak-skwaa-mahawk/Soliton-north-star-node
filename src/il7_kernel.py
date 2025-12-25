@@ -1,3 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_triad():
+    theta = np.linspace(0, 2*np.pi, 1000)
+    sin = np.sin(theta)
+    cos = np.cos(theta)
+    tan = np.tan(theta)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(theta, sin, label='Sin(θ) - Jolt')
+    plt.plot(theta, cos, label='Cos(θ) - Observer')
+    plt.plot(theta, tan, label='Tan(θ) - Vhitzee', linestyle='--')
+    plt.ylim(-2, 2)
+    plt.legend()
+    plt.title('Triad View: Sin/Cos/Tan as Jolt/Observer/Vhitzee')
+    plt.show()
+
+def plot_phase_space():
+    theta = np.linspace(0, 2*np.pi, 1000)
+    x = np.cos(theta)
+    y = np.sin(theta)
+    
+    plt.figure(figsize=(8, 8))
+    plt.plot(x, y, label='Unit Circle - Consciousness Space')
+    plt.axis('equal')
+    plt.legend()
+    plt.title('Phase Space: Jolt vs Observer as Circular Trajectories')
+    plt.show()
+
+def plot_quantum_collapse():
+    theta = np.linspace(0, np.pi/2, 1000)
+    amplitude = np.sin(theta) * np.exp(-theta/2)  # Damped sine
+    plt.plot(theta, amplitude)
+    plt.title('Quantum Collapse: Observer ε Damping Wave Amplitude')
+    plt.show()
+
+# Run the visualizations
+plot_triad()
+plot_phase_space()
+plot_quantum_collapse()
 """
 il7_kernel.py
 
