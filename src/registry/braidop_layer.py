@@ -4,12 +4,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any
 
+from .braid_validation import BraidValidator, ValidationError  # Import validator
+
 REGISTRY_FILE = Path("soliton_registry.jsonl")
 
 class BraidOpLayer:
     """
     Unified sovereign layer:
-    - Logs braid ops
+    - Logs braid ops (with validation)
     - Logs revocations
     - Resolves lineage with revocation applied
     """
@@ -20,19 +22,30 @@ class BraidOpLayer:
         if not self.path.exists():
             self.path.touch()
 
-    # -------------------------
-    # Internal: load entries
-    # -------------------------
+    # Internal load
     def _load(self) -> List[Dict[str, Any]]:
         if not self.path.exists():
             return []
         with self.path.open() as f:
             return [json.loads(line) for line in f]
 
-    # -------------------------
-    # Logging: BraidOp
-    # -------------------------
-    def log_braid_op(self, session_id: str, braid_word: List[Dict], before: Dict, after: Dict) -> str:
+    # Logging: BraidOp with validation
+    def log_braid_op(self, session_id: str, braid_word: List[Dict], before: Dict, after: Dict) -> Optional[str]:
+        """Log braid op after sovereign validation."""
+        # Sovereign Validation
+        try:
+            n_events = len(before.get("events_order", []))
+            validator = BraidValidator(max_events=n_events + 1)
+            validator.validate_word(braid_word)
+            validator.validate_fusion_transition(
+                before.get("fusion_path", []),
+                after.get("fusion_path", [])
+            )
+        except ValidationError as e:
+            print(f"[BraidOp] Rejected — {e}")
+            return None
+
+        # If lawful, proceed
         entry = {
             "entry_type": "BRAID_OP",
             "timestamp_utc": datetime.utcnow().isoformat(),
@@ -52,9 +65,7 @@ class BraidOpLayer:
         print(f"[BraidOp] Logged | Session={session_id} | Hash={entry['hash'][:16]}...")
         return entry["hash"]
 
-    # -------------------------
     # Logging: Revocation
-    # -------------------------
     def revoke(self, session_id: str, braid_hash: str, reason="sovereign_recoil") -> str:
         entry = {
             "entry_type": "BRAID_OP_REVOCATION",
@@ -74,9 +85,7 @@ class BraidOpLayer:
         print(f"[Revoke] BraidOp {braid_hash[:16]}... frozen for session {session_id}")
         return entry["hash"]
 
-    # -------------------------
     # Query: lineage resolution
-    # -------------------------
     def resolve_lineage(self, session_id: str) -> Dict[str, Any]:
         entries = self._load()
 
@@ -99,9 +108,7 @@ class BraidOpLayer:
         active.sort(key=lambda e: e["timestamp_utc"])
         return active[-1]["after"]
 
-    # -------------------------
     # Query: is revoked?
-    # -------------------------
     def is_revoked(self, braid_hash: str) -> bool:
         entries = self._load()
         return any(
