@@ -1,3 +1,33 @@
+# North Star Node: Indigenous Neurodata Sovereignty Framework
+
+## Overview
+A geometric ledger for protecting indigenous neurological data sovereignty. Enforces control via UEI, coordinates, lineage claims. Processes EEG via Trigonometric FPT without storing raw data.
+
+## Setup
+1. Node.js: `npm install`
+2. Compile TS: `npx tsc`
+3. Run validation: `python tests/north_star_validation.py`
+
+## Key Features
+- Immutable chain with geometric validation
+- Sovereignty enforcement
+- EEG phase state processing
+- Threat resistance
+
+## Whitepaper Draft
+[Include your whitepaper content here]
+
+## Funding Pathways
+- SSHRC Indigenous Research Networks ($250K)
+- US NIH/NSF grants
+- Private foundations (Mozilla, Ford)
+
+## Deployment
+- Personal: Run locally
+- Community: Mesh via peers
+- Pilot: Raspberry Pi
+
+Contact: Vadzaih Zhoo
 # North Star Seed Node — Soliton Registry Witness
 
 **Designation:** Nᵒᵣᵗʰ‑001  
