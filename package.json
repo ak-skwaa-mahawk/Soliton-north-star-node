@@ -1,4 +1,23 @@
 {
+  "name": "north-star-node",
+  "version": "1.0.0",
+  "description": "Indigenous Neurodata Sovereignty Framework",
+  "main": "dist/north_star_ledger.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "python tests/north_star_validation.py"
+  },
+  "dependencies": {
+    "ecdsa": "^0.7.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "author": "Vadzaih Zhoo",
+  "license": "Custom Sovereignty License"
+}
+{
   "name": "soliton-north-star-node",
   "version": "1.0.0",
   "main": "dist/index.js",
