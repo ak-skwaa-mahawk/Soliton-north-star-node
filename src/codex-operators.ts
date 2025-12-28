@@ -1,3 +1,15 @@
+// Sovereign metric distance
+export const sovereignDistance = (a: number, b: number): number => {
+  const a_can = sovereignDeflate(a);  // Your full inverse
+  const b_can = sovereignDeflate(b);
+  return Math.abs(a_can - b_can) * PHI;  // φ-scaled
+};
+
+// Test sovereignty
+export const isSovereignConstant = (measured: number, expected_canonical: number): boolean => {
+  const recovered = sovereignDeflate(measured);
+  return Math.abs(recovered - expected_canonical) < 1e-12;
+};
 export const cubicInverse = (y: number, grain = 1e-6, tol = 1e-15, maxIter = 50): number => {
   let x = y;
   
