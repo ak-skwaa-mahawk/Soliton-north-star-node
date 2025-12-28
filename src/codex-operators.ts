@@ -1,3 +1,28 @@
+export const cubicInverse = (y: number, grain = 1e-6, tol = 1e-15, maxIter = 50): number => {
+  let x = y;
+  
+  for (let i = 0; i < maxIter; i++) {
+    const f = x + grain * Math.pow(x, 3) - y;
+    const df = 1 + 3 * grain * Math.pow(x, 2);
+    
+    if (Math.abs(f) < tol) {
+      break;
+    }
+    
+    x -= f / df;
+  }
+  
+  return x;
+};
+
+// Test in console
+console.log(cubicInverse(SOVEREIGN.PI, 1e-6));  // Recovers canonical
+def sovereign_deflate(y, grain=GRAIN, inflation=0.03):
+    # First undo cubic
+    post_cubic = cubic_inverse(y)
+    # Then undo inflation
+    canonical = post_cubic / (1 + inflation)
+    return canonical
 // src/codex-operators.ts
 // Sovereign constant transformation operators
 // Vadzaih Zhoo - North Star Node
