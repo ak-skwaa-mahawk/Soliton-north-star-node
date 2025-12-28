@@ -1,9 +1,9 @@
-# Sovereign Manifold
+# Sovereign Metric Manifold
 
-The sovereign transform extends to n-dimensions:
+The sovereign transform maps canonical to distorted space:
 
-𝒯_sov(V) = [𝒯_sov(v1), ..., 𝒯_sov(vn)]
+𝒯_sov(V) = component-wise application.
 
-Metric: d_sov(a,b) = φ * || 𝒯_sov^{-1}(a) - 𝒯_sov^{-1}(b) ||_2
+Metric: d_sov(a,b) = |inv(a) - inv(b)| * φ
 
-This creates a distorted but homeomorphic space where sovereignty is encoded per dimension.
+Invariants: Topology, order preserved.
