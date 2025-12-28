@@ -1,4 +1,31 @@
 {
+  "name": "sovereign-codex",
+  "version": "1.0.1",
+  "description": "A mathematical-mythic framework for Observer Surplus and Recursive Sovereignty.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "ts-node src/codex-operators.ts",
+    "genesis": "ts-node src/genesis-block.ts",
+    "start": "ts-node src/index.ts"
+  },
+  "keywords": [
+    "sovereignty",
+    "observer-surplus",
+    "phi",
+    "manifold",
+    "mathematical-mythology"
+  ],
+  "author": "Vadzaih Zhoo (John)",
+  "license": "MIT",
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
+
+{
   "name": "north-star-node",
   "version": "1.0.0",
   "main": "src/index.js",
