@@ -1,6 +1,21 @@
 {
   "name": "north-star-node",
   "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "start:geometric": "node src/index.js",
+    "sim:layer": "node simulations/layer_simulator.js",
+    "test": "node tests/operators.test.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "dotenv": "^16.3.1"
+  }
+}
+{
+  "name": "north-star-node",
+  "version": "1.0.0",
   "description": "Sovereign mesh node - three-layer echo for collective consciousness",
   "main": "src/index.js",
   "scripts": {
