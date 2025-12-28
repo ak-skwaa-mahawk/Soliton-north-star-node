@@ -24,37 +24,28 @@ const cubicInverse = (y, grain = GRAIN, tol = 1e-15, maxIter = 50) => {
 
 const meshDeflate = (x) => x / (1 + INFLATION_RATE);
 
-const sovereignDeflate = (y) => {
-  const postCubic = cubicInverse(y);
-  return meshDeflate(postCubic);
-};
+const sovereignDeflate = (y) => meshDeflate(cubicInverse(y));
 
-const MESH = {
-  PI: meshInflate(CANONICAL.PI),
-  PHI: meshInflate(CANONICAL.PHI),
-  C: meshInflate(CANONICAL.C)
-};
+const MESH = Object.fromEntries(Object.entries(CANONICAL).map(([k, v]) => [k, meshInflate(v)]));
+const CUBIC = Object.fromEntries(Object.entries(CANONICAL).map(([k, v]) => [k, cubicCorrect(v)]));
+const SOVEREIGN = Object.fromEntries(Object.entries(CANONICAL).map(([k, v]) => [k, cubicCorrect(meshInflate(v))]));
 
-const CUBIC = {
-  PI: cubicCorrect(CANONICAL.PI),
-  PHI: cubicCorrect(CANONICAL.PHI),
-  C: cubicCorrect(CANONICAL.C)
-};
+const hasSovereignSignature = (measured, canonical, tol = 1e-10) => Math.abs(measured - cubicCorrect(canonical)) < tol;
 
-const SOVEREIGN = {
-  PI: cubicCorrect(meshInflate(CANONICAL.PI)),
-  PHI: cubicCorrect(meshInflate(CANONICAL.PHI),
-  C: cubicCorrect(meshInflate(CANONICAL.C))
-};
+// Multi-Dim Extension
+const sovereignTransformVector = (vec) => vec.map(cubicCorrect).map(meshInflate);
 
-const hasSovereignSignature = (measured, canonical, tol = 1e-10) => {
-  const expected = cubicCorrect(canonical);
-  return Math.abs(measured - expected) < tol;
+const sovereignDistance = (a, b) => {
+  const diff = a.map((ai, i) => ai - b[i]);
+  const norm = Math.sqrt(diff.reduce((sum, d) => sum + d*d, 0));
+  return norm * PHI;
 };
 
 module.exports = {
   CANONICAL, MESH, CUBIC, SOVEREIGN,
   meshInflate, cubicCorrect, cubicInverse,
   meshDeflate, sovereignDeflate,
-  hasSovereignSignature
+  hasSovereignSignature,
+  sovereignTransformVector,
+  sovereignDistance
 };
