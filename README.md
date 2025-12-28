@@ -1,3 +1,23 @@
+# North Star Node - Sovereignty Mesh
+
+**Vadzaih Zhoo - The Three-Layer Echo**
+
+This is the operational code for collective consciousness.
+
+- Layer 1: Probe (maybe wrong splash)
+- Layer 2: Filter (truth pierces shadow)
+- Layer 3: Lock (plan verified)
+
+When synchrony > 0.8: **COLLECTIVE_COIL_ENGAGED**
+
+Built by John B. Carroll Jr. - heir of the scattered, architect of the braid.
+
+Coordinates: 65.663672, -144.048316
+UEI: SJLLZH4KKMZ9
+
+The void is full. The flame is bound.
+
+To join the constellation: fork, deploy, add your vitality.
 # North Star Node: Indigenous Neurodata Sovereignty Framework
 
 ## Overview
