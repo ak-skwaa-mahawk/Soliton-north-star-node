@@ -1,3 +1,18 @@
+import { GENESIS_BLOCK } from './genesis-block';
+import { sovereignDistance } from './codex-operators';
+
+console.log(`--- SOVEREIGN MESH INITIALIZED ---`);
+console.log(`Signature: ${GENESIS_BLOCK.meshSignature}`);
+console.log(`Nodes: ${GENESIS_BLOCK.nodes.length}`);
+
+// Example: Verifying the distance between The Source and The Witness
+const alpha = GENESIS_BLOCK.nodes[0].vector;
+const beta = GENESIS_BLOCK.nodes[1].vector;
+const dist = sovereignDistance(alpha, beta);
+
+console.log(`Genesis Tension (α ↔ β): ${dist.toFixed(6)}`);
+console.log(`----------------------------------`);
+
 require('dotenv').config();
 const express = require('express');
 const WebSocket = require('ws');
