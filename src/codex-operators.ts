@@ -1,69 +1,38 @@
-// Sovereign metric distance
-export const sovereignDistance = (a: number, b: number): number => {
-  const a_can = sovereignDeflate(a);  // Your full inverse
-  const b_can = sovereignDeflate(b);
-  return Math.abs(a_can - b_can) * PHI;  // φ-scaled
-};
-
-// Test sovereignty
-export const isSovereignConstant = (measured: number, expected_canonical: number): boolean => {
-  const recovered = sovereignDeflate(measured);
-  return Math.abs(recovered - expected_canonical) < 1e-12;
-};
-export const cubicInverse = (y: number, grain = 1e-6, tol = 1e-15, maxIter = 50): number => {
-  let x = y;
-  
-  for (let i = 0; i < maxIter; i++) {
-    const f = x + grain * Math.pow(x, 3) - y;
-    const df = 1 + 3 * grain * Math.pow(x, 2);
-    
-    if (Math.abs(f) < tol) {
-      break;
-    }
-    
-    x -= f / df;
-  }
-  
-  return x;
-};
-
-// Test in console
-console.log(cubicInverse(SOVEREIGN.PI, 1e-6));  // Recovers canonical
-def sovereign_deflate(y, grain=GRAIN, inflation=0.03):
-    # First undo cubic
-    post_cubic = cubic_inverse(y)
-    # Then undo inflation
-    canonical = post_cubic / (1 + inflation)
-    return canonical
 // src/codex-operators.ts
 // Sovereign constant transformation operators
 // Vadzaih Zhoo - North Star Node
 
+const PHI = 1.618033988749895;
+const INFLATION_RATE = 0.03;
+const GRAIN = 1e-6;
+
 const CANONICAL = {
-  PI: 3.141592653589793,
-  PHI: 1.618033988749895,
-  C: 299792458 // m/s
+  PI: Math.PI,
+  PHI: (1 + Math.sqrt(5)) / 2,
+  C: 299792458
 };
 
-const EPSILON_BASE = 0.0417; // Base surplus
-const INFLATION_RATE = 0.03; // 3% mesh inflator (0.75 × ε_base)
-const GRAIN = 0.000001; // 10^-6 = (0.01)^3 cubic
-
-// Operator 1: 3% Mesh Inflator
 const meshInflate = (x: number): number => x * (1 + INFLATION_RATE);
-
-// Operator 2: Cubic Corrector (sovereignty grain)
 const cubicCorrect = (x: number): number => x + GRAIN * Math.pow(x, 3);
 
-// Inverse operators
-const meshDeflate = (x: number): number => x / (1 + INFLATION_RATE);
-const cubicRevert = (x: number): number => {
-  // Approximate inverse (solve x + g x^3 = y for x)
-  const y = x;
-  return y * (1 - GRAIN * Math.pow(y, 2)); // First-order approximation
+const cubicInverse = (y: number, grain = GRAIN, tol = 1e-15, maxIter = 50): number => {
+  let x = y;
+  for (let i = 0; i < maxIter; i++) {
+    const f = x + grain * Math.pow(x, 3) - y;
+    const df = 1 + 3 * grain * Math.pow(x, 2);
+    if (Math.abs(f) < tol) break;
+    x -= f / df;
+  }
+  return x;
 };
 
-// Transformed constants
+const meshDeflate = (x: number): number => x / (1 + INFLATION_RATE);
+
+const sovereignDeflate = (y: number, grain = GRAIN): number => {
+  const postCubic = cubicInverse(y, grain);
+  return meshDeflate(postCubic);
+};
+
 const MESH = {
   PI: meshInflate(CANONICAL.PI),
   PHI: meshInflate(CANONICAL.PHI),
@@ -82,13 +51,12 @@ const SOVEREIGN = {
   C: cubicCorrect(meshInflate(CANONICAL.C))
 };
 
-// Validation: Check if value has sovereign signature
-const hasSovereignSignature = (measured: number, canonical: number, tolerance = 1e-10): boolean => {
+const hasSovereignSignature = (measured: number, canonical: number, tol = 1e-10): boolean => {
   const expected = cubicCorrect(canonical);
-  return Math.abs(measured - expected) < tolerance;
+  return Math.abs(measured - expected) < tol;
 };
 
-// Self-test
+// Self-test function
 const runTests = () => {
   console.log("=== Codex Operators Verification ===\n");
 
@@ -96,6 +64,7 @@ const runTests = () => {
     { name: "Linearity check", test: Math.abs(meshInflate(1) - 1.03) < 1e-10 },
     { name: "Cubic smallness", test: Math.abs(CUBIC.PI - CANONICAL.PI - GRAIN * Math.pow(CANONICAL.PI, 3)) < 1e-10 },
     { name: "Inflator/deflator inverse", test: Math.abs(meshDeflate(meshInflate(CANONICAL.PI)) - CANONICAL.PI) < 1e-10 },
+    { name: "Sovereign deflate inverse", test: Math.abs(sovereignDeflate(SOVEREIGN.PHI) - CANONICAL.PHI) < 1e-10 },
     { name: "Sovereign signature detection", test: hasSovereignSignature(CUBIC.PI, CANONICAL.PI) },
     { name: "Sovereign PI match", test: Math.abs(CUBIC.PI - 3.1416210062) < 1e-10 },
     { name: "Sovereign PHI match", test: Math.abs(CUBIC.PHI - 1.6180042358) < 1e-10 }
@@ -112,9 +81,9 @@ const runTests = () => {
   console.log("=== Constants Table ===\n");
   console.log("Constant | Canonical     | Mesh (3%)     | Cubic         | Sovereign");
   console.log("---------|---------------|---------------|---------------|---------------");
-  console.log(`π        | ${CANONICAL.PI} | ${MESH.PI} | ${CUBIC.PI} | ${SOVEREIGN.PI}`);
-  console.log(`φ        | ${CANONICAL.PHI} | ${MESH.PHI} | ${CUBIC.PHI} | ${SOVEREIGN.PHI}`);
-  console.log(`c (m/s)  | ${CANONICAL.C}  | ${MESH.C.toFixed(2)}  | ${CUBIC.C.toFixed(6)} | ${SOVEREIGN.C.toFixed(2)}`);
+  console.log(`π        | ${CANONICAL.PI.toFixed(10)} | ${MESH.PI.toFixed(10)} | ${CUBIC.PI.toFixed(10)} | ${SOVEREIGN.PI.toFixed(10)}`);
+  console.log(`φ        | ${CANONICAL.PHI.toFixed(10)} | ${MESH.PHI.toFixed(10)} | ${CUBIC.PHI.toFixed(10)} | ${SOVEREIGN.PHI.toFixed(10)}`);
+  console.log(`c (m/s)  | ${CANONICAL.C.toFixed(0)}  | ${MESH.C.toFixed(2)}  | ${CUBIC.C.toFixed(6)} | ${SOVEREIGN.C.toFixed(6)}`);
 
   console.log("\n🔥 Operators crystallized. The constants know their transformations.");
 };
@@ -128,5 +97,8 @@ export {
   SOVEREIGN,
   meshInflate,
   cubicCorrect,
+  cubicInverse,
+  meshDeflate,
+  sovereignDeflate,
   hasSovereignSignature
 };
