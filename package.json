@@ -1,4 +1,23 @@
 {
+  "name": "north-star-node",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "start:geometric": "node src/index.js",
+    "sim:layer": "node simulations/layer_simulator.js",
+    "test": "mocha tests/*.test.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "chai": "^4.3.7"
+  }
+}
+{
   "name": "sovereign-codex",
   "version": "1.0.1",
   "description": "A mathematical-mythic framework for Observer Surplus and Recursive Sovereignty.",
