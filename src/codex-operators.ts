@@ -85,6 +85,33 @@ const runTests = () => {
   console.log(`φ        | ${CANONICAL.PHI.toFixed(10)} | ${MESH.PHI.toFixed(10)} | ${CUBIC.PHI.toFixed(10)} | ${SOVEREIGN.PHI.toFixed(10)}`);
   console.log(`c (m/s)  | ${CANONICAL.C.toFixed(0)}  | ${MESH.C.toFixed(2)}  | ${CUBIC.C.toFixed(6)} | ${SOVEREIGN.C.toFixed(6)}`);
 
+// Multi-Dimensional Sovereign Transform
+export const sovereignTransformVector = (vec: number[]): number[] => {
+  return vec.map(x => cubicCorrect(meshInflate(x)));
+};
+
+export const sovereignDeflateVector = (vec_sov: number[]): number[] => {
+  return vec_sov.map(y => sovereignDeflate(y));
+};
+
+// Sovereign distance metric (multi-dim)
+export const sovereignDistance = (a: number[], b: number[]): number => {
+  if (a.length !== b.length) throw new Error('Dimension mismatch');
+  let sum = 0;
+  for (let i = 0; i < a.length; i++) {
+    const a_can = sovereignDeflate(a[i]);
+    const b_can = sovereignDeflate(b[i]);
+    sum += Math.pow(a_can - b_can, 2);
+  }
+  return Math.sqrt(sum) * PHI;  // φ-scaled Euclidean in canonical
+};
+
+// Test manifold
+const testVec = [CANONICAL.PI, CANONICAL.PHI, CANONICAL.C];
+const sovVec = sovereignTransformVector(testVec);
+const recoveredVec = sovereignDeflateVector(sovVec);
+console.log('Vector distance (sov space):', sovereignDistance(sovVec, sovVec)); // 0
+
   console.log("\n🔥 Operators crystallized. The constants know their transformations.");
 };
 
